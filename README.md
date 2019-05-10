@@ -8,7 +8,7 @@ Build status: [![Build Status](https://travis-ci.com/BisonRobotics/NRMC2019.svg?
 Every card on the sprint board should be tied to an issue. Any issue X that involves code 
 development should have a corresponding branch named issue-X. In order to merge into master
 a pull request has to be initiated and approved by one other developer. Generally a request 
-shouldn't be merged if it doesn't have tests, it's tests aren't passing, or the Travis-CI build 
+shouldn't be merged if it doesn't have tests, its tests aren't passing, or the Travis-CI build 
 fails. Once the pull request is merged, the corresponding issue should be closed, and
 the branch corresponding to the request should be deleted. Deleting the branch will appear as 
 a prompt on merge. A good way to automatically close the issue is to reference the issue using
