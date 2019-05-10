@@ -97,17 +97,6 @@ catkin_make -DCMAKE_BUILD_TYPE=Debug test_WaypointControllerHelper2
 gdb ./devel/lib/wheel_control/test_WaypointControllerHelper2
 ```
 
-# Known Issues/Bugs in "Not-Our-Stuff"
-## CANables
-You may not be able to enumerate two CANables on the same computer easily and as you would imagine. There is a bug in the CANable firmware which makes one CANable enumerate as two. So, to work around this issue: make one of them can1 and the other can2. Forget about can0. Less than nothing, it decieved you, and so should be scorned.
-```
-sudo ip link set can1 type can bitrate 500000 triple-sampling on
-sudo ip link set can1 up
-
-sudo ip link set can2 type can bitrate 500000 triple-sampling on
-sudo ip link set can2 up
-```
-
 # Speeding up compilation
 ```
 # Disable compilation of GUIs and simulation
