@@ -1,0 +1,284 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="robot">
+
+    <!-- Define materials -->
+    <material name="brown">
+        <color rgba="0.45 0.45 0.28 1"/>
+    </material>
+
+    <material name="orange">
+        <color rgba="0.5 0.24 0.00 1"/>
+    </material>
+
+    <material name="green">
+        <color rgba="0.24 0.34 0.00 1"/>
+    </material>
+
+    <material name="black">
+        <color rgba="0.30 0.30 0.30 1"/>
+    </material>
+
+    <material name="grey">
+        <color rgba="0.70 0.70 0.70 1"/>
+    </material>
+
+    <material name="gold">
+        <color rgba="0.85490196078 0.64705882352 0.12549019607 1"/>
+    </material>
+
+    <!-- Pull in parameters -->
+    <xacro:arg name="fixed_central_drive" default="1" />
+    <xacro:property name="central_drive_joint_type" value="revolute" />
+    <xacro:property name="monoboom_angle" value="0" />
+    <xacro:if value="$(arg fixed_central_drive)">
+        <xacro:property name="central_drive_joint_type" value="fixed" />
+        <xacro:property name="monoboom_angle" value="${-pi*0.28}" />
+    </xacro:if>
+
+    <xacro:arg name="fixed_drivetrains" default="0" />
+    <xacro:property name="drivetrain_joint_type" value="revolute" />
+    <xacro:if value="$(arg fixed_drivetrains)">
+        <xacro:property name="drivetrain_joint_type" value="fixed" />
+    </xacro:if>
+
+    <xacro:arg name="fixed_nodeys" default="0" />
+    <xacro:property name="nodey_joint_type" value="revolute" />
+    <xacro:if value="$(arg fixed_nodeys)">
+        <xacro:property name="nodey_joint_type" value="fixed" />
+    </xacro:if>
+
+    <!-- Define linkages and joints -->
+    <link name="base_link" />
+
+    <link name="frame">
+        <visual>
+            <geometry>
+                <mesh filename="package://description/meshes/frame.stl" />
+            </geometry>
+            <origin xyz="0 0 0" rpy="${pi/2} 0 0" />
+            <material name="grey" />
+        </visual>
+    </link>
+
+    <joint name="base_link_to_frame" type="fixed">
+        <parent link="base_link"/>
+        <child link="frame"/>
+        <origin xyz="-0.5 0 0.65" rpy="0 0 0" />
+    </joint>
+
+    <xacro:macro name="wheel" params="x_name y_name rot r_z y_dir xdist color ">
+        <link name="${x_name}_${y_name}_wheel">
+            <visual>
+                <geometry>
+                    <mesh filename="package://description/meshes/wheel.stl" />
+                </geometry>
+                <origin xyz="0 0 0" rpy="${rot} 0 ${r_z}" />
+                <material name="${color}"/>
+            </visual>
+        </link>
+
+        <joint name="${x_name}_${y_name}_wheel_joint" type="${drivetrain_joint_type}">
+            <parent link="frame"/>
+            <child link="${x_name}_${y_name}_wheel"/>
+            <origin xyz="${xdist} ${y_dir*0.257109468} -0.5055752" />
+            <axis xyz="0 1 0"/>
+            <limit effort="1000.0" lower="-1e9" upper="1e9" velocity="1000.0"/>
+        </joint>
+    </xacro:macro>
+    <xacro:wheel x_name="front" y_name="left"  rot="${-pi/2}" r_z="-1.575" y_dir="1.15"  xdist="0.85025" color="gold"    />
+    <xacro:wheel x_name="front" y_name="right" rot="${pi/2}"  r_z="1.575" y_dir="-1.15" xdist="0.85025" color="gold"  />
+    <xacro:wheel x_name="back"  y_name="left"  rot="${-pi/2}" r_z="-1.575" y_dir="1.15"  xdist="0.1655676" color="gold"   />
+    <xacro:wheel x_name="back"  y_name="right" rot="${pi/2}"  r_z="1.575" y_dir="-1.15" xdist="0.1655676" color="gold"  />
+
+    <link name="central_drive" />
+
+    <joint name="frame_to_central_drive" type="${central_drive_joint_type}">
+        <parent link="frame"/>
+        <child link="central_drive"/>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <axis xyz="0 1 0"/>
+        <limit effort="1000.0" lower="-1e9" upper="1e9" velocity="1000.0"/>
+    </joint>
+
+    <link name="computer_box">
+        <visual>
+            <geometry>
+                <mesh filename="package://description/meshes/battery_box.stl" />
+            </geometry>
+            <origin xyz="0.9 -0.275 -0.3" rpy="1.57 0 -1.57" />
+            <material name="black" />
+        </visual>
+    </link>
+
+    <joint name="computer_box_to_base" type="fixed" >
+        <parent link="frame" />
+        <child link="computer_box" />
+        <origin xyz="0 0 0" rpy="0 0 0" />
+    </joint>
+
+    <link name="battery_box">
+        <visual>
+            <geometry>
+                <mesh filename="package://description/meshes/battery_box.stl" />
+            </geometry>
+            <origin xyz="0.9 0.275 -0.3" rpy="1.57 0 1.57" />
+            <material name="black" />
+        </visual>
+    </link>
+
+    <joint name="battery_box_to_base" type="fixed" >
+        <parent link="frame" />
+        <child link="battery_box" />
+        <origin xyz="0 0 0" rpy="0 0 0" />
+    </joint >
+
+    <link name="backhoe_monoboom">
+        <visual>
+            <geometry>
+                <mesh filename="package://description/meshes/backhoe_monoboom.stl" />
+            </geometry>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <material name="black" />
+        </visual>
+    </link>
+
+    <joint name="frame_to_monoboom" type="${central_drive_joint_type}">
+        <origin xyz="0.98 0 -0.365" rpy="1.57 ${monoboom_angle} 3.14" />
+        <axis xyz="0 0 -1" />
+        <parent link="frame" />
+        <child link="backhoe_monoboom" />
+        <limit effort="1000.0" lower="-1" upper="0.85" velocity="1.0" />
+    </joint>
+
+    <link name="bucket_backhoe">
+        <visual>
+            <geometry>
+                <mesh filename="package://description/meshes/backhoe_bucket.stl" />
+            </geometry>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <material name="grey" />
+        </visual>
+    </link>
+
+    <joint name="monoboom_to_bucket" type="${central_drive_joint_type}">
+        <origin xyz="0.55 0 0" rpy="0 0 ${20*pi/180}" />
+        <axis xyz="0 0 1" />
+        <parent link="backhoe_monoboom" />
+        <child link="bucket_backhoe" />
+        <limit effort="1000.0" lower="0" upper="2.25" velocity="1" />
+    </joint>    
+
+    <link name="gravel_bucket">
+        <visual>
+            <geometry>
+                <mesh filename="package://description/meshes/gravel_bucket.stl" />
+            </geometry>
+            <origin xyz="0 0 0" rpy="1.57 0 0" />
+            <material name="black" />
+        </visual>
+    </link>
+
+    <joint name="frame_to_gravel_bucket" type="${central_drive_joint_type}">
+
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <axis xyz="0 -1 0" />
+        <parent link="frame"/>
+        <child link="gravel_bucket" />        
+        <limit effort="1000.0" lower="0" upper="1.25" velocity="1.0" />
+    </joint>
+
+    <link name="left_flap">
+        <visual>
+            <geometry>
+                <mesh filename="package://description/meshes/left_flap.stl"/>
+            </geometry>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <material name="grey" />
+        </visual>
+    </link>
+
+    <joint name="left_flap_joint" type="${central_drive_joint_type}">
+        <origin xyz="0.53 0.125 -0.2" rpy="1.57 0 -1.57" />
+        <axis xyz="0 0 1" />
+        <parent link="frame" />
+        <child link="left_flap" />
+        <limit effort="1000.0" lower="-1.55" upper="1.25" velocity="1.0" />
+
+    </joint>
+
+    <link name="right_flap">
+        <visual>
+            <geometry>
+                <mesh filename="package://description/meshes/right_flap.stl" />
+            </geometry>
+            <origin xyz="0 0 0" rpy="0 ${pi} 0" />
+            <material name="grey" />
+        </visual>
+    </link>
+
+    <joint name="right_flap_joint" type="${central_drive_joint_type}">
+        <origin xyz="0.53 -0.125 -0.2" rpy="${pi/2} 0 -${pi/2}" />
+        <axis xyz="0 0 -1" />
+        <parent link="frame" />
+        <child link="right_flap" />
+        <limit effort="1000.0" lower="-1.55" upper="1.25" velocity="1.0" />
+    </joint>
+
+    <xacro:macro name="camera" params="side direction rotation">
+        <link name="${side}_tracker_mount">
+            <visual>
+                <geometry>
+                    <mesh filename="package://description/meshes/${side}_tracker.stl" />
+                </geometry>
+                <origin xyz="0.035 ${direction*0.32} -0.04" rpy="${pi/2} 0 0" />
+                <material name="black" />
+            </visual>
+        </link>
+
+        <joint name="${side}_tracker_fixed" type="fixed">
+            <origin xyz="${-0.035+3.3/39.37} ${-direction*0.32} 0.04" rpy="0 0 0" />
+            <parent link= "frame" />
+            <child link = "${side}_tracker_mount" />
+        </joint>
+
+        <link name="${side}_camera_base"/>
+
+        <joint name="${side}_tracker_joint" type="fixed">
+            <origin xyz="0 0 0" rpy="${pi/2} ${pi} ${rotation}" />
+            <parent link="${side}_tracker_mount" />
+            <child link = "${side}_camera_base" />
+        </joint>
+
+        <link name="${side}_camera">
+            <visual>
+                <geometry>
+                    <mesh filename="package://description/meshes/tracker_camera.stl" />
+                </geometry>
+                <origin xyz="0 0 0.01" rpy="0 0 ${pi/2}" />
+                <material name="black" />
+            </visual>
+        </link>
+
+        <joint name="${side}_tracker_joint_2" type="${nodey_joint_type}">
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <parent link="${side}_camera_base" />
+            <child link = "${side}_camera" />
+            <limit effort="1000.0" lower="-4" upper="1" velocity="1.0" />
+        </joint>
+    </xacro:macro>
+    <xacro:camera side="right" direction="1.0" rotation="0.0" />
+    <xacro:camera side="left" direction="-1.0" rotation="${pi}" />
+
+    <!-- Add a few static transforms for testing -->
+    <xacro:arg name="test_urdf" default="false"/>
+    <xacro:if value="$(arg test_urdf)">
+        <link name="map" />
+        <joint name="map_to_base_link" type="fixed">
+            <parent link="map"/>
+            <child link="base_link"/>
+            <origin xyz="${42*0.0254} ${0.0254*245} 0" rpy="0 0 ${-pi/2}" />
+        </joint>
+    </xacro:if>
+</robot>
+
+

@@ -1,0 +1,7 @@
+string command_state
+string waypoint_state
+FeedbackInfo feedback
+Command command
+Waypoint waypoint
+geometry_msgs/Pose2D pose
+float64 battery_voltage

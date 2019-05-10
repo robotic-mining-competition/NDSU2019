@@ -1,0 +1,29 @@
+# based off https://github.com/jalessio/ansible-role-ros
+# run locally with "ansible-playbook -i "localhost," -c local dev_computer_playbook.yml"
+---
+- hosts: localhost
+  tasks:
+    - include: ros_init.yml
+
+    - name: install ros packages
+      become: yes
+      apt: pkg=ros-kinetic-{{ item }} state=latest update_cache=true
+      with_items:
+        - desktop
+
+    - include: common_tasks.yml
+
+    - name: get and unpack vrep
+      unarchive:
+        src: http://coppeliarobotics.com/files/V-REP_PRO_EDU_V3_5_0_Linux.tar.gz
+        dest: "{{ playbook_dir }}/../../.."
+        copy: no
+
+    - name: configure vrep
+      become: yes
+      shell: |
+        cd {{ playbook_dir }}/../../..
+        mv V-REP_PRO_EDU_V3_5_0_Linux vrep
+        ln -s $(pwd)/devel/lib/libv_repExtNRMC2019Plugin.so vrep/
+      args:
+        executable: /bin/bash

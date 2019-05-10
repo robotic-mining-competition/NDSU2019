@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="arena">
+    <link name="map">
+        <visual>
+            <geometry>
+                <mesh filename="package://description/meshes/arena.dae" />
+            </geometry>
+            <!--<origin xyz="3.695 0 -0.61" rpy="0 0 -${pi/2}"/>-->
+            <origin xyz="${1.9} 3.695 -0.61" rpy="0 0 0"/>
+
+        </visual>
+    </link>
+
+    <!-- Define apriltag locations -->
+    <link name="hopper" />
+
+    <!--<link name="tag1" />
+    <link name="tag4" />-->
+
+    <joint name="map_to_hopper" type="fixed">
+        <origin xyz="0.48 1.075 0" rpy="0 0 0" />
+        <parent link="map" />
+        <child link = "hopper" />
+    </joint>
+
+    <xacro:macro name="tag" params="id xyz theta">
+        <link name="tag${id}_position" />
+        <link name="tag${id}" />
+
+        <joint name="hopper_to_tag${id}_position" type="fixed">
+            <origin xyz="${xyz}" rpy="0 0 ${theta}" />
+            <parent link="hopper" />
+            <child link = "tag${id}_position" />
+        </joint>
+
+        <joint name="tag${id}_pose_to_tag${id}" type="fixed">
+            <origin xyz="0 0 0" rpy="${pi/2} 0 ${pi/2}" />
+            <parent link="tag${id}_position" />
+            <child link = "tag${id}" />
+        </joint>
+    </xacro:macro>
+    <xacro:tag id="1" xyz="0.2159 -0.7234 0.2563" theta="1.1310" />
+    <xacro:tag id="4" xyz="${0.25*0.0254} ${25.625*0.0254} ${10.5125*0.0254}" theta="0" />
+    <xacro:tag id="8" xyz="${2.81*0.0254} ${-(22.34+6)*0.0254} ${22.4375*0.0254}" theta="${63.5/180*pi}" />
+</robot>

@@ -1,0 +1,102 @@
+# Arena locations
+# - Collector bin   = [0.00 0.25 0.48 1.90]
+# - Starting Zone B = [0.48 0.00 2.13 1.90] Center = [1.305 0.95]
+# - Starting Zone A = [2.13 0.00 3.78 1.90] Center = [2.955 0.95]
+# - Obstacle Zone   = [0.00 1.90 3.78 4.64]
+# - Mining Zone     = [0.00 4.64 3.78 7.38]
+
+timers:
+  finish_dig_1:
+    m: 1.0
+    s: 0.0
+  finish_dig_2:
+    m: 2.0
+    s: 0.0
+
+paths:
+  dig_1:
+    -
+      x: 2.955
+      y: 1.75
+      theta: 0.0
+      reverse: false
+      match_orientation: false
+      drive_profile: 0
+    -
+      x: 2.955
+      y: 5.5
+      theta: 0.0
+      reverse: false
+      match_orientation: false
+      drive_profile: 0
+
+  hopper_1:
+    -
+      x: 2.955
+      y: 0.95
+      theta: 0.0
+      reverse: true
+      match_orientation: false
+      drive_profile: 0
+    -
+      x: 2.13
+      y: 0.95
+      theta: 0.0
+      reverse: true
+      match_orientation: false
+      drive_profile: 1
+    -
+      x: 1.75
+      y: 0.95
+      theta: 0.0
+      reverse: true
+      match_orientation: false
+      drive_profile: 1
+
+  dig_2:
+    -
+      x: 2.955
+      y: 1.75
+      theta: 0.0
+      reverse: false
+      match_orientation: false
+      drive_profile: 0
+    -
+      x: 2.955
+      y: 5.5
+      theta: 0.0
+      reverse: false
+      match_orientation: false
+      drive_profile: 0
+
+  hopper_2:
+    -
+      x: 2.955
+      y: 0.95
+      theta: 0.0
+      reverse: true
+      match_orientation: false
+      drive_profile: 0
+    -
+      x: 2.13
+      y: 0.95
+      theta: 0.0
+      reverse: true
+      match_orientation: false
+      drive_profile: 1
+    -
+      x: 1.75
+      y: 0.95
+      theta: 0.0
+      reverse: true
+      match_orientation: false
+      drive_profile: 1
+
+  final_position:
+    -
+      x: 2.955
+      y: 0.95
+      theta: 0.0
+      reverse: false
+      match_orientation: false
+      drive_profile: 0

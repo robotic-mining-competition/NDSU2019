@@ -1,0 +1,5 @@
+std_msgs/Header header
+Time competition_timer
+string competition_state
+string waypoint_state
+string dig_state
