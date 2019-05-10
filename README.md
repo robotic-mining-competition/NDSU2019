@@ -3,6 +3,37 @@ Repository for the Bison Robotics NASA Robotic Mining Competition 2019 Entry
 
 Build status: [![Build Status](https://travis-ci.com/BisonRobotics/NRMC2019.svg?token=vbD9yxJbUfLNy2L7yUif&branch=master)](https://travis-ci.com/BisonRobotics/NRMC2019)
 
+# Disclaimer
+This repository is provided as is. There is little documentation, plenty of bugs, lots of bad ideas, and chunks of code that haven't been uploaded since I don't own them. At best the code in this repository can serve as an example for teams looking for an okay set of examples for an autonomous mining robot.
+
+# Package structure
+```
+└── src
+    ├── controls
+    │   ├── competition - Controller for the competition
+    │   ├── dig_control - Controller for the dig system
+    │   └── waypoint_control - Controller for the drive system
+    ├── description - URDF related code
+    ├── hardware_layer - Meta package for drivers and hardware utilities
+    │   ├── camera_calibration - Hacky opencv based camera calibrator
+    │   ├── driver_access - Interface for the simulator
+    │   ├── lpms_imu - Package for our IMU
+    │   ├── motor_configs - VESC motor configs
+    │   ├── sensor_access - Not included
+    │   ├── stepper - Stepper driver
+    │   └── vesc_access - Not included
+    ├── launch
+    ├── navigation - Meta package for navigation
+    │   ├── localization - Not included
+    │   ├── navigation_msgs - Custom ROS messages for navigation 
+    │   └── tracker - AprilTag based absolute localization
+    ├── simulation - Meta package for simulation
+    │   ├── README.md
+    │   ├── vrep_msgs - Custom ROS messages for VREP
+    │   └── vrep_plugin - Plugin for VREP simulator
+    └── utilities - Catch all for scripts and code
+```
+
 # Development Conventions
 ### GitHub
 Every card on the sprint board should be tied to an issue. Any issue X that involves code 
